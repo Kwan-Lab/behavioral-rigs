@@ -1,0 +1,41 @@
+# SETUP LOGFILE, OUTPUT FILES, DISPLAY, TERMINAL, & PARAMETER WINDOW FOR 2-CHOICE DISCRIMINATION TASKS
+#
+#--------------------------------------------------------------------------------------- 
+
+# LOGFILE NAME 
+string dateStr = (date_time("yymmddhhnn")); # Store startTime in str for naming files
+logfile.set_filename(logfile.subject() +"_DISCRIM_"+ dateStr + ".log"); #unique filename for session, e.g., M40_DISCRIM_1706221807
+
+# INITIALIZE OUTPUT FILES
+string fname_statsLog = "statsLog_" + logfile.subject() +"_"+ dateStr + ".txt"; 
+output_file statsLog = new output_file; 
+
+string fname_parameterLog = "parameterLog_" + logfile.subject() +"_"+ dateStr + ".txt"; 
+output_file parameterLog = new output_file; 
+
+# SET SYSTEM VOLUME
+set_system_volume(system_volume, double(1));
+
+# SETUP DISPLAY WINDOW, TERMINAL, AND LOGFILE HEADER 
+string startTime = date_time(); # Store startTime in str for logfile
+display_window.draw_text("Initializing...");
+logfile.add_event_entry(startTime);
+
+# SETUP PARAMETER WINDOW
+int statNames; int spacer; int consecmissIndex; int trialnumIndex;
+array <int> trialTypeIdx[2];
+array <string> trialTypeStr[2] = {"Upsweep Trials:\t", "Downsweep Trials:"};
+
+parameter_window.remove_all();
+
+statNames = parameter_window.add_parameter(" ");
+trialTypeIdx[1] = parameter_window.add_parameter(trialTypeStr[1]);
+trialTypeIdx[2] = parameter_window.add_parameter(trialTypeStr[2]);
+spacer = parameter_window.add_parameter("\n");  
+consecmissIndex = parameter_window.add_parameter("Consec. Misses:");
+trialnumIndex = parameter_window.add_parameter("Trial Number:");
+
+parameter_window.set_parameter(statNames, "Hit Err Miss   %Hit");
+parameter_window.set_parameter(spacer, " ");  
+
+parameter_window.set_name_width(parameter_window.TEXT_COLUMN_WIDTH); #set width to max text width

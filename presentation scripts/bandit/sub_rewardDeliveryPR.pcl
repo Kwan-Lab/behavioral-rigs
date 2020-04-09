@@ -1,0 +1,15 @@
+##SUBROUTINE - Version 5/30/2018
+sub #DELIVER REWARD AND UPDATE LASTRESPTIME, LICK COUNT, REPS, AND PARAMETER WINDOW 
+rewardDeliveryPR(string var_side)
+begin
+	int code ; int pulse_dur; 
+	if var_side=="left" then
+		code = 4; pulse_dur = waterAmount_left;     # this code is set in digital hard drive. it has to be 4 for left and 8 for right (this 'code' is different from event code)
+   elseif var_side=="right" then
+		code = 8; pulse_dur = waterAmount_right; 
+	end;
+	port.set_pulse_width(pulse_dur);
+	port.send_code(code);		#give water reward to side (left/right)
+	if     var_side=="left" then; rewardLeft.present();
+	elseif var_side=="right" then;rewardRight.present(); end;
+end;

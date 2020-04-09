@@ -1,0 +1,20 @@
+# GET RANDOM INTERTRIAL INTERVALS
+
+sub array <int,1> drawExpITIs(int min, int max, double lambda, int nTrials)
+begin
+	array <int> exp_ITI[nTrials];
+	display_window.erase();
+	display_window.draw_text("Drawing ITIs...");
+
+	loop int i = 1 until i > nTrials
+	begin
+		loop exp_ITI[i] = int(min - 1000*log(random())/lambda) # For X = U(0,1), EXP(p) = -1/p * log(X).
+		until exp_ITI[i]<max
+		begin
+			exp_ITI[i] = int(min - 1000*log(random())/lambda); # Factor of 1000 for ms.
+		end;
+		i = i+1;
+	end;
+
+return exp_ITI;
+end; #End subroutine

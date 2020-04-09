@@ -1,0 +1,74 @@
+# RECORD SESSION PARAMETERS TO OUTPUT FILE
+#
+# AUTHOR: MJ Siniscalchi, 170623
+# LAST EDIT:
+# -------------------------------------------------------------------------------- 
+
+sub 
+print_BehaviorConfig(string fname, output_file ofile)
+begin	
+
+# GET SDL TRIAL NAMES, TRIALS, AND STIMULUS EVENTS
+array <string> event_names[8] = {"startTrial","upsweepCue","downsweepCue","rewardLeft","rewardRight","timeout   ","pause     ","endTrial"}; 
+
+array <trial> event_types[8]; 
+event_types[1] = startTrial; 
+event_types[2] = upsweepCue; 
+event_types[3] = downsweepCue; 
+event_types[4] = rewardLeft;
+event_types[5] = rewardRight; 
+event_types[6] = timeout; 
+event_types[7] = pause; 
+event_types[8] = endTrial;
+
+array <stimulus_event> events[8];
+loop int i = 1 
+until i > event_types.count()
+begin
+	events[i] = event_types[i].get_stimulus_event(1);
+	i = i+1;
+end;
+
+# PRINT SDL TRIAL PARAMETERS
+ofile.open(fname);
+ofile.print("LOGFILE: " + logfile.filename());
+ofile.print("\n\n"+"EVENT"+"\t\t"+"DURATION"+"\t"+"CODE"+"\n");
+ofile.print("------------------------------------");
+
+loop int i = 1 
+until i > events.count()
+begin
+ofile.print("\n" + event_names[i] + "\t" + string(event_types[i].duration()) + "\t\t" + events[i].event_code());
+i = i+1;
+end;
+
+# USER DEFINED VARIABLES TO REPORT
+array <string> param_names[0];
+array <double> params[0];
+param_names.add("waterAmount_left "); 	params.add(waterAmount_left);
+param_names.add("waterAmount_right"); 	params.add(waterAmount_right);
+param_names.add("max_consecMiss   ");	params.add(max_consecMiss);
+param_names.add("max_consecHits   ");	params.add(max_consecHits);
+param_names.add("system_volume    ");	params.add(system_volume);
+param_names.add("max_trials       ");	params.add(max_trials);
+param_names.add("ITI_min          ");	params.add(ITI_min);
+param_names.add("ITI_max          ");	params.add(ITI_max);
+param_names.add("EXP_lambda       ");	params.add(EXP_lambda);
+
+stimulus_event tempStim = upsweepCue.get_stimulus_event(1);
+param_names.add("stimulus_time_in ");	params.add(tempStim.stimulus_time_in());
+
+# PRINT VALUES FOR USER DEFINED VARIABLES
+ofile.print_line("\n\n"+"PARAMETER"+"\t\t"+"VALUE");
+ofile.print_line("-----------------------------");
+loop int i = 1; 
+double value;
+until i > params.count()
+begin
+ofile.print_line(param_names[i] + "\t" + string(params[i]));
+i = i+1;
+end;
+
+ofile.close(); 
+
+end; #End subroutine.

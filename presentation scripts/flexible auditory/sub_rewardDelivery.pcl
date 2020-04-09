@@ -1,0 +1,26 @@
+# DELIVER WATER REWARD
+# 
+# NOTE: Requires these additional variables/objects in workspace:
+#			1) trial rewardLeft, trial rewardRight		# Fixed duration placeholder trials 
+#			2) int portcode_left, int waterAmount_left, (+same for right port)
+#  
+#----------------------------------------------------------------------------------------
+
+  
+sub 
+rewardDelivery(string target_side)
+begin
+	int code; int pulse_dur; int idx; int count; trial reward;
+	
+	if target_side=="left" then
+		code = portcode_left; 
+		pulse_dur = waterAmount_left; 
+		reward = rewardLeft;
+	elseif target_side=="right" then
+		code = portcode_right; 
+		pulse_dur = waterAmount_right; 
+		reward = rewardRight;
+	end;
+	port.send_code(code, pulse_dur);		# Give pulse for water reward
+	reward.present();				# Present matching reward event 
+end;

@@ -1,0 +1,22 @@
+# PRINT SUMMARY STATS
+#
+# --------------------------------------------------------------------------------
+sub 
+printStats(string fname, output_file ofile)
+begin
+	ofile.open(fname);
+	ofile.print("\n\nStarting time: "+startTime+
+		"\nSubject: "+logfile.subject()+
+		"\n\t\t\t\tHit\tInc\tMiss\t%Hit"); 
+	loop int j = 1 until j > 2 
+	begin #stats for each trial type
+		ofile.print("\n\t" + trialTypeStr[j] + "\t" + string(outcomeArray[j][1])
+			+ "\t"	+ string(outcomeArray[j][2]) + "\t" + string(outcomeArray[j][3])
+			+ "\t" + string(hitRates[j]));
+		j=j+1
+	end;
+ofile.print("\n\t" + "Overall %Hit" + "\t\t" + string(totalHitRate));
+ofile.print("\n\nEnding time:");
+ofile.print(date_time());
+ofile.close();
+end;

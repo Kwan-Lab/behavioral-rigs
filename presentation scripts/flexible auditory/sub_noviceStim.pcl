@@ -1,0 +1,14 @@
+# FORCE ALT STIMULUS AFTER >2 CONSECUTIVE HITS FOR ONLY ONE SIDE
+#
+#------------------------------------------------------------------
+
+sub 
+	int noviceStim(int type, array<int> cHits[2]) 
+begin 
+	if cHits[1]>max_consecHits then # >2 consec hits on left
+		type = 2; # Return Downsweep trial 
+	elseif cHits[2]>max_consecHits then
+		type = 1; # Return Upsweep trial 
+	end;
+	return type; 
+end;

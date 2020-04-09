@@ -1,0 +1,30 @@
+# GET ARBITRARY PARAMETER VALUES FROM SCENARIO INITIALIZATION FILE (*.pcl) 
+#
+#---------------------------------------------------------------------------
+
+sub double get_parameterValue(string path_name, string parameter_name, double para_value) # Path+filename, parameter name, and default value
+begin
+	input_file ini_file = new input_file;
+	ini_file.open(path_name);
+	
+	loop string p = ""
+	until p == parameter_name
+	begin
+		p = ini_file.get_string();
+		
+		if p == "#" then
+			ini_file.get_line();
+		
+		elseif ini_file.end_of_file() then
+			term.print(parameter_name+" not found in INI file... Using default value = "+string(para_value)+"\n");
+			break;
+		
+		elseif ini_file.last_succeeded() && p == parameter_name then
+			ini_file.get_string();
+			para_value = ini_file.get_double();
+			term.print(parameter_name + " = " + string(para_value)+"\n");
+		end;
+	end;
+	ini_file.close();	
+	return para_value;
+end;

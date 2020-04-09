@@ -1,0 +1,103 @@
+# SetUp Parameters for Reversal - Version 5/30/2018
+
+# LOGFILE NAME 
+string dateStr = (date_time("yymmddhhnn")); # Store startTime in str for naming files
+logfile.set_filename(logfile.subject() + "_"+ scenario + "_"+ dateStr + ".log"); #unique filename for session, e.g., M40_DISCRIM_1706221807
+
+string fname_statsLog = "statsLog_" + logfile.subject() + "_"+ scenario + "_" + dateStr + ".txt"; 
+output_file statsLog = new output_file; 
+
+string fname_parameterLog = "parameterLog_" + logfile.subject()  + "_"+ scenario + "_"+ dateStr + ".txt"; 
+output_file parameterLog = new output_file; 
+string animalID  = logfile.subject();
+
+#CONFIGURE OUTPUT PORT
+output_port port = output_port_manager.get_port(1);
+
+#INITIALIZE VARIABLES
+preset int block       = 0;
+if block==0 then;
+ block=int(ceil(random()*double(2))); # Task Consistency
+end;
+int count_switch       = 0;
+int button             = 0;      # temporary for debug
+int n_trial            = 0;
+int nTrials_hiP		  = 0;      # trials passed in current block
+int nTrials_hiP_total  = 0;
+int consecMiss         = 0;
+int indMiss				  = 0;
+int indNolick          = 0;
+
+int left_r          = 0;
+int left_no_r       = 0;
+
+int right_r         = 0;
+int right_no_r      = 0;
+
+int HPS             = 0;
+int indHPS          = 0;
+
+int consecOutcomeL  = 0;
+int consecOutcomeR  = 0;
+
+preset int max_consecMiss = 20;  # triggers end session, for mice, set to 20
+preset int waterAmount_left  = 30;    #   14~3.3uL 2/14/2017
+preset int waterAmount_right = 30;
+
+double reward_threshold = double(0); #threshold for reward, will change later in the code
+
+double minimum  = 1.0;      # For no lick loop
+double mu       = 0.33333;  # For no lick loop rate parameter for exponential distribution
+double truncate = 5.0;      # For no lick loop
+double maxNolick= 5;        # For no lick loop
+  
+int trialType;              # 1 & 2 
+string side;
+string state;
+double i_geo     = double(0) ;  # block switch index
+int block_length = 0;
+double ii        = double(1);   # sample from geometric distribution
+double m         = double(0);
+double SwitchHit = 10;
+int portcode_trig  = 32;
+int portcode_pup   = 16;
+
+#SETUP PARAMETER WINDOW
+string startTime = date_time(); # Store startTime in str for logfile
+
+parameter_window.remove_all();
+int animalIDind				= parameter_window.add_parameter("AnimalID");
+int trialnumIndex             = parameter_window.add_parameter("Trial num");
+int hiP_rateIndex             = parameter_window.add_parameter("HPS_rate");
+
+int left_rIndex         = parameter_window.add_parameter("Left Reward");
+int left_no_rIndex      = parameter_window.add_parameter("Left NoReward");
+
+int right_rIndex         = parameter_window.add_parameter("Right Reward");
+int right_no_rIndex      = parameter_window.add_parameter("Right NoReward");
+
+int switch_count              = parameter_window.add_parameter("Switch");
+int nTrials_hiP_totalIndex    = parameter_window.add_parameter("TotalHit");
+int nTrials_hiP_blockIndex    = parameter_window.add_parameter("BlockHit");
+
+int consecmissIndex           = parameter_window.add_parameter("Consec Miss");
+int indMissIndex		         = parameter_window.add_parameter("Total Miss");
+
+int state_Index               = parameter_window.add_parameter("State");
+int block_Index               = parameter_window.add_parameter("HPS side");
+int geo_Index                 = parameter_window.add_parameter("Geo_sample");
+int re_Index                  = parameter_window.add_parameter("Rew (All-miss)");
+int expIndex                  = parameter_window.add_parameter("ITI(ms)");
+int NolickIndex               = parameter_window.add_parameter("LickSupFail");
+
+int conOutL                  = parameter_window.add_parameter("conL");
+int conOutR                  = parameter_window.add_parameter("conR");
+
+# FOR REACTION TIME
+array <int>leftRT[0];
+array <int>rightRT[0];
+int leftMeanRT_index			  = parameter_window.add_parameter("LeftMeanRT");
+int rightMeanRT_index  		  = parameter_window.add_parameter("RightMeanRT");
+int leftRT_index	 			  = parameter_window.add_parameter("LeftRT");
+int rightRT_index  			  = parameter_window.add_parameter("RightRT");
+

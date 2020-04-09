@@ -1,0 +1,12 @@
+# Mean of Array
+sub 
+int arrayMean(array<int,1>& my_array) 
+begin
+	int sum = 0; int k = 0;
+	loop int i = 1 until i> my_array.count() begin
+		sum = sum +my_array[i];
+		i=i+1; k = i;
+	end;
+	int meanArray = sum/k;
+return meanArray;
+end;

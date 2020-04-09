@@ -1,0 +1,49 @@
+# INITIALIZE VARIABLES AND OUTPUT FILES AND SETUP DISPLAY FOR 2-CHOICE DISCRIM TASKS
+#
+#-------------------------------------------------------------------------------------------
+
+# GET INI FILES
+preset string user_name = "Default"; # Prompt user for file prefix, e.g., initials "MJS"
+string ini_pathname = "C:\\Users\\KWANLAB\\Desktop\\Presentation\\ini_"+user_name+".pcl";
+
+# SET TASK PARAMETERS 
+include "sub_getParameterValue.pcl";
+
+int waterAmount_left = int(get_parameterValue(ini_pathname,"waterAmount_left",60)); # Valve open duration in ms
+int waterAmount_right = int(get_parameterValue(ini_pathname,"waterAmount_right",60));	
+int max_trials = int(get_parameterValue(ini_pathname,"max_trials",1000)); # Triggers end session in random ITI tasks; size of ITI vector. 
+double system_volume = get_parameterValue(ini_pathname,"system_volume",0.05); # Range: (0,1]; @0.05, mice can detect sounds (MEASURE dB ASAP)
+
+# FIXED PARAMETERS (Should not be changed within a training cycle)
+int max_consecMiss = 20; # Triggers end session
+int max_consecHits = 3; # For noviceStim: maximum consecutive hits on only one side
+int max_consecStim = 4; # For restrictConsecStim: maximum consecutive repeats of a stimulus.
+
+int ITI_min = 5000; # Min and max ITI in ms; measured from last response to next sound cue.
+int ITI_max = 16000; # Min = duration_reward+duration_startTrial+c; endTrial_duration = EXP()+c truncated to max 
+double EXP_lambda = 0.25; # Rate constant for endTrial_duration = EXP() in seconds; mu is 1/lambda for PDF
+
+array <int> ITI[max_trials]; # Array to hold ITIs
+int EXP_max = ITI_max - (startTrial.duration()+rewardLeft.duration()); # Subtract out constant event durations
+int EXP_min = ITI_min - (startTrial.duration()+rewardLeft.duration()); # From response, ITI = 3000+EXP(lambda)+500 for reward/endTrial/startTrial...
+
+# INITIALIZE TRIAL VARIABLES
+int consecMiss; # Counter var for consecutive misses 
+int outcome; 	# Code{1,2,3} == {hit, incorrect, miss}
+int trialType; # Code{1,2} == {Upsweep_trial, Downsweep_trial}
+int portCode; 	# Code{4,8} == {left,right} 
+int pulseDur; 	# Set to waterAmount_left or waterAmount_right before each trial
+string targetSide; # Current target port: "left" or "right"
+
+int totalHitRate;
+array <int> consecHits[2]; # Counters for consecutive hits: {Upsweep, Downsweep}
+array <int> consecStim[2]; # Counters for consecutive cues: {Upsweep, Downsweep}
+array <int> outcomeArray[2][3]; #trial type x outcome  
+array <int> hitRates[2]; 	# Hitrates for each trial type
+
+#INITIALIZE OUTPUT PORT VARIABLES
+output_port port = output_port_manager.get_port(1);
+int portcode_left = 4; # Digital I/O # is log base2 of portcode 
+int portcode_right = 8;
+int portcode_trig = 32;
+

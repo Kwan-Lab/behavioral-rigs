@@ -1,0 +1,19 @@
+#	sub updateConsecStim()
+#
+#	PURPOSE: Count the number of consecutive repeats of each stimulus. 
+#  NOTES: Required for sub restrictConsecStim()
+#
+#-----------------------------------------------------------------------
+
+sub array<int,1> updateConsecStim(int stim_type, array<int,1> consec_stim)
+begin
+	
+	if stim_type==1 then
+		consec_stim[2] = 0; # Zero out alt stimulus. 
+	elseif stim_type==2 then
+		consec_stim[1] = 0;
+	end;
+	consec_stim[stim_type] = consec_stim[stim_type]+1; # Increment count for current stimulus. 
+	
+return consec_stim;	
+end;
